@@ -2,6 +2,7 @@
 # Variables Globales
 EXECUTE_PROGRAM=true
 CONNECTED_USERS=0
+PWD=$(pwd)
 # functions
 show_free_space_in_disk(){
   echo "$(df -h)"
@@ -26,7 +27,7 @@ show_last_connected_users_number(){
 directory_size() {
  printf "Introduce el directorio: "
  read result
- echo "Buscando en $result desde $pwd"
+ echo "Buscando en $result desde $PWD"
  size=$(du -hs "$result")
  echo "$size" 
 }
@@ -34,7 +35,7 @@ directory_size() {
 five_last_lines(){
  printf "Introduce la dirección del fichero: "
  read result
- echo "Buscando archivo en $result desde $pwd"
+ echo "Buscando archivo en $result desde $PWD"
  echo "$(tail -5 "$result")"
 }
 
@@ -43,17 +44,20 @@ copy_bash_and_c_files() {
  read from
  printf "Introduce el directorio destino: "
  read to
- mkdir -p -m 777 $to
-
+ mkdir -p $to
+ root_dirname=$(dirname $to)
+ chmod 777 -R "$(dirname $root_dirname)"
  for i in $(find "$from" -type f -name "*.sh" -o -name "*.c"); do
-  if cp -r "$from/$i" "$to/$i"; then
-    echo "$i copiado con éxito"
+  basename=$(basename $i)
+  if cp -r "$i" "$to/$basename"; then
+    echo "$basename copiado con éxito"
   else
-      echo "Error al copiar $i"
+      echo "Error al copiar $basename"
   fi
  done  
 }
 
+echo "Directorio de trabajo $PWD"
 echo "¡Te doy la bienvenida al Super Script!"
 
 while [ EXECUTE_PROGRAM ]; do
