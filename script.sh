@@ -1,13 +1,13 @@
+#!/bin/sh
 # Variables Globales
-
 EXECUTE_PROGRAM=true
 CONNECTED_USERS=0
 # functions
-showFreeSpaceInDisk(){
+show_free_space_in_disk(){
   echo "$(df -h)"
 }
 
-showUsageOfCpu() {
+show_usage_of_cpu() {
  echo "El uso de la cpu es: "
  echo "=================================================="
  echo "$(top -l 1 | grep ^CPU | tail -1)"
@@ -41,20 +41,17 @@ five_last_lines(){
 copy_bash_and_c_files() {
  printf "Introduce el directorio origen: "
  read from
- echo "\n"
  printf "Introduce el directorio destino: "
  read to
- mkdir -p $to
+ mkdir -p -m 777 $to
 
-
- files=($(ls "$from" | grep '.[sh|c]$'))
- 
- for i in "${files[@]}"
- do
-  echo "El archivo es $i" g
-  $(cp "$from/$i" "$to/$i")
+ for i in $(find "$from" -type f -name "*.sh" -o -name "*.c"); do
+  if cp -r "$from/$i" "$to/$i"; then
+    echo "$i copiado con éxito"
+  else
+      echo "Error al copiar $i"
+  fi
  done  
-
 }
 
 echo "¡Te doy la bienvenida al Super Script!"
@@ -105,4 +102,3 @@ while [ EXECUTE_PROGRAM ]; do
     ;;
   esac
 done
-
