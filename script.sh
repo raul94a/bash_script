@@ -11,10 +11,8 @@ show_free_space_in_disk(){
 
 show_usage_of_cpu() {
  # Funciona en mac pero no en ubuntu, investigar!
- echo "El uso de la cpu es: "
- echo "=================================================="
- echo "$(top -l 1 | grep ^CPU | tail -1)"
- echo "==================================================\n"
+ echo "\nEl uso de la cpu es: "
+ echo "$(top -b -n 1| grep ^%Cpu)\n"
 }
 
 show_connected_users() {
