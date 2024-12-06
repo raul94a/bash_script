@@ -5,10 +5,12 @@ CONNECTED_USERS=0
 PWD=$(pwd)
 # functions
 show_free_space_in_disk(){
+  # El comando df con la flag -h nos permite obtener el tamaño de cada disco
   echo "$(df -h)"
 }
 
 show_usage_of_cpu() {
+ # Funciona en mac pero no en ubuntu, investigar!
  echo "El uso de la cpu es: "
  echo "=================================================="
  echo "$(top -l 1 | grep ^CPU | tail -1)"
@@ -16,6 +18,9 @@ show_usage_of_cpu() {
 }
 
 show_connected_users() {
+  # Who nos devuelve sesiones en nuestro sistema operativo
+  # wc -l cuenta las líneas
+  # xargs nos elimina los espacios en blanco existentes
   CONNECTED_USERS=$(who | wc -l | xargs)
   echo "El número de usuarios conectados es ${CONNECTED_USERS}"
 }
@@ -28,6 +33,7 @@ directory_size() {
  printf "Introduce el directorio: "
  read result
  echo "Buscando en $result desde $PWD"
+ # du -hs nos devuelve el tamaño del directorio. Creo que existe alguna flag para indicarle la unidad de almacenamiento a devolver
  size=$(du -hs "$result")
  echo "$size" 
 }
@@ -58,19 +64,21 @@ copy_bash_and_c_files() {
 }
 
 echo "Directorio de trabajo $PWD"
-echo "¡Te doy la bienvenida al Super Script!"
+echo "\n¡Te doy la bienvenida al Super Script!\n"
 
 while [ EXECUTE_PROGRAM ]; do
 
-  echo "=========== MENÚ DEL PROGRAMA ==========="
-  echo "\t1. Obtener el espacio libre del disco"
-  echo "\t2. Obtener el tamaño ocupado por un directorio (ficheros y subdirectorios incluídos)"
-  echo "\t3. Uso del procesador"
-  echo "\t4. Número de usuarios conectados"
-  echo "\t5. Número de usuarios conectados desde la última vez que se preguntó"
-  echo "\t6. Mostrar las últimas cinco líneas de un fichero"
-  echo "\t7. Copiar todos los archivos .c y .sh desde origen a destino"
-  echo "\t8. Salir del programa\n"
+  echo "|===================================== MENÚ DEL PROGRAMA ======================================|"
+  echo "|\t1. Obtener el espacio libre del disco                                                  |"
+  echo "|\t2. Obtener el tamaño ocupado por un directorio (ficheros y subdirectorios incluídos)   |"
+  echo "|\t3. Uso del procesador                                                                  |"
+  echo "|\t4. Número de usuarios conectados                                                       |"
+  echo "|\t5. Número de usuarios conectados desde la última vez que se preguntó                   |"
+  echo "|\t6. Mostrar las últimas cinco líneas de un fichero                                      |"                    
+  echo "|\t7. Copiar todos los archivos .c y .sh desde origen a destino                           |"
+  echo "|\t8. Salir del programa                                                                  |"
+  echo "|==============================================================================================|"
+
   printf "Elige una opción: "
   read result
 
@@ -98,11 +106,14 @@ while [ EXECUTE_PROGRAM ]; do
     ;;
    "8")
      echo "Has elegido salir del programa. ¡Adiós!"
+     # Realmente con el break es suficiente  
      EXECUTE_PROGRAM=false
      break
      ;; 
    *)
-    echo "Opción incorrecta"
+    # Limpiamos la consola
+    clear
+    echo "\n¡Error! La opción introducida ($result) es incorrecta\n"
     ;;
   esac
 done
